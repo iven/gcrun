@@ -1,0 +1,22 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+
+PROJECT (GCRUN)
+
+# CMake module path
+SET (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+# destination paths
+SET (GC_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/gcrun)
+#SET (GC_PIXMAPS_DIR ${CMAKE_INSTALL_PREFIX}/share/gcrun/pixmaps)
+SET (GC_DOC_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/gcrun)
+SET (GC_LOCALE_DIR ${CMAKE_INSTALL_PREFIX}/share/locale)
+# documents
+SET (DOCS AUTHORS COPYING ChangeLog INSTALL NEWS README TODO)
+# configure file
+CONFIGURE_FILE (config.h.cmake ${CMAKE_SOURCE_DIR}/src/config.h)
+# add subdirectories
+ADD_SUBDIRECTORY (src bin)
+# install files and directories
+INSTALL (FILES ${DOCS} DESTINATION ${GC_DOC_DIR})
+#INSTALL (DIRECTORY pixmaps/ DESTINATION ${GC_PIXMAPS_DIR})
+INSTALL (DIRECTORY config/ DESTINATION ${GC_DATA_DIR})
+INSTALL (DIRECTORY locale/ DESTINATION ${GC_LOCALE_DIR})
