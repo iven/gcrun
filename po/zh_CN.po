@@ -1,0 +1,20 @@
+# gcrun - GTK+ Completion-Run Utility
+# Copyright (C) 2010 Iven Day
+# This file is distributed under the same license as the gcrun package.
+# Iven Day <ivenvd@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gcrun 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-05 17:53+0800\n"
+"PO-Revision-Date: 2010-02-05 18:06+0800\n"
+"Last-Translator: Iven Day <ivenvd@gmail.com>\n"
+"Language-Team: Chinese (simplified)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/main.c:58
+msgid "Run Program"
+msgstr "运行程序"
