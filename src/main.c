@@ -20,7 +20,8 @@
 #include <mcheck.h>
 #endif
 
-#include	"config.h" 
+#include	"main.h"
+#include	"gc_config.h"
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -36,6 +37,7 @@ main (int argc, char *argv[])
 #endif
 
     gtk_init(&argc, &argv);
+    gc_config_init();
 
     bindtextdomain(GC_GETTEXT_PACKAGE, GC_LOCALE_DIR);
     bind_textdomain_codeset(GC_GETTEXT_PACKAGE, "UTF-8");

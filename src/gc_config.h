@@ -16,9 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef  main_h_INC
-#define  main_h_INC
+#ifndef  gc_config_h_INC
+#define  gc_config_h_INC
 
-#include	"config.h" 
+#include	"config.h"
+gboolean gc_config_init(void);
 
-#endif   /* ----- #ifndef main_h_INC  ----- */
+#endif   /* ----- #ifndef gc_config_h_INC  ----- */
