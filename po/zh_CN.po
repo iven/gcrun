@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gcrun 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-05 17:53+0800\n"
+"POT-Creation-Date: 2010-02-06 21:51+0800\n"
 "PO-Revision-Date: 2010-02-05 18:06+0800\n"
 "Last-Translator: Iven Day <ivenvd@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -15,6 +15,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/main.c:58
-msgid "Run Program"
-msgstr "运行程序"
+#: ../src/gc_config.c:34
+#, c-format
+msgid "Unable to load configuration file: %s"
+msgstr "无法载入配置文件: %s"
+
+#: ../src/gc_config.c:51
+#, c-format
+msgid "Getting group %s from configuration..."
+msgstr "正在从配置文件获得组 %s ……"
+
+#: ../src/gc_config.c:54
+#, c-format
+msgid "Unable to load group %s: %s"
+msgstr "无法载入组 %s: %s"
+
+#: ../src/gc_config.c:61
+#, c-format
+msgid "Unable to get key %s: %s"
+msgstr "无法获得键 %s: %s"
+
+#: ../src/gc_main_window.c:38
+msgid "Run Program:"
+msgstr "运行程序："
