@@ -31,29 +31,48 @@ static gboolean gc_key_file_init(void)
             search_path, NULL,
             G_KEY_FILE_NONE, &err);
     if (err != NULL) {
-        g_warning("Unable to load configuration: %s\n", err->message);
+        g_warning(_("Unable to load configuration file: %s"), err->message);
         g_error_free(err);
         return TRUE;
     }
     return FALSE;
 }
 
-static gchar **gc_key_file_get_keys(const char *group_name)
+static void gc_value_replace_variable(gpointer *value)
+{
+    /* TODO: replace ${variable}s */
+}
+static void gc_key_file_get_keys(const char *group_name,
+        gpointer get_key(GKeyFile *, const gchar *, const gchar *, GError **))
 {
     GError *err = NULL;
-    gchar **keys = NULL;
+    gchar **keys = NULL, **pkey = NULL;
+    gpointer value;
+    g_message(_("Getting group %s from configuration..."), group_name);
     keys = g_key_file_get_keys(gc_key_file, group_name, NULL, &err);
     if (err != NULL) {
-        g_warning("Unable to load group %s: %s\n", group_name, err->message);
+        g_warning(_("Unable to load group %s: %s"), group_name, err->message);
         g_error_free(err);
+        return;
     }
-    return keys;
+    for (pkey = keys; *pkey != NULL; pkey++) {
+        value = get_key(gc_key_file, group_name, *pkey, &err);
+        if (err != NULL) {
+            g_warning(_("Unable to get key %s: %s"), *pkey, err->message);
+            g_error_free(err);
+            continue;
+        }
+        if (get_key == g_key_file_get_string) {
+            gc_value_replace_variable(&value);
+        }
+        g_datalist_set_data(&gc_config, *pkey, value);
+//        g_message("Got key %s = %d", *pkey, GPOINTER_TO_INT(g_datalist_get_data(&gc_config, *pkey)));
+    }
+    g_strfreev(keys);
 }
-    
+
 gboolean gc_config_init (void)
 {
-    GError *err = NULL;
-    gchar **keys = NULL, **p;
     g_datalist_init(&gc_config);
 
     if (gc_key_file_init()) {
@@ -61,13 +80,14 @@ gboolean gc_config_init (void)
         return TRUE;
     }
 
-    keys = gc_key_file_get_keys("Geometry");
-    if (keys != NULL) {
-        for (p = keys; *p != NULL; p++) {
-            g_print("%s - %d\n", *p, g_key_file_get_integer(gc_key_file, "Geometry", *p, NULL));
-        }
-        g_strfreev(keys);
-    }
+    gc_key_file_get_keys("Environment", g_key_file_get_string);
+    gc_key_file_get_keys("Geometry", g_key_file_get_integer);
+    gc_key_file_get_keys("History", g_key_file_get_integer);
+    gc_key_file_get_keys("Completion", g_key_file_get_integer);
+    gc_key_file_get_keys("Switch", g_key_file_get_boolean);
+    gc_key_file_get_keys("ProtocolHandler", g_key_file_get_string);
+    gc_key_file_get_keys("ExtensionHandler", g_key_file_get_string);
+
     g_key_file_free (gc_key_file);
     return FALSE;
 }

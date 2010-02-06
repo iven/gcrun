@@ -21,6 +21,8 @@
 #endif     /* -----  not MTRACE  ----- */
 
 #include	"main.h"
+#include	"gc_config.h"
+#include	"gc_main_window.h"
 
 /* 
  * ===  FUNCTION  ======================================================================
