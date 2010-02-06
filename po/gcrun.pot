@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-06 21:51+0800\n"
+"POT-Creation-Date: 2010-02-06 22:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: ../src/gc_config.c:51
 #, c-format
-msgid "Getting group %s from configuration..."
+msgid "Loading group %s from configuration..."
 msgstr ""
 
 #: ../src/gc_config.c:54
@@ -34,6 +34,11 @@ msgstr ""
 #: ../src/gc_config.c:61
 #, c-format
 msgid "Unable to get key %s: %s"
+msgstr ""
+
+#: ../src/gc_config.c:69
+#, c-format
+msgid "Got key %s"
 msgstr ""
 
 #: ../src/gc_main_window.c:38
