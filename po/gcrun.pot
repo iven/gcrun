@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-06 22:11+0800\n"
+"POT-Creation-Date: 2010-02-07 18:23+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,24 +21,34 @@ msgstr ""
 msgid "Unable to load configuration file: %s"
 msgstr ""
 
-#: ../src/gc_config.c:51
+#: ../src/gc_config.c:49
 #, c-format
-msgid "Loading group %s from configuration..."
+msgid "Loading group %s..."
 msgstr ""
 
-#: ../src/gc_config.c:54
+#: ../src/gc_config.c:52
 #, c-format
 msgid "Unable to load group %s: %s"
 msgstr ""
 
-#: ../src/gc_config.c:61
+#: ../src/gc_config.c:68
 #, c-format
-msgid "Unable to get key %s: %s"
+msgid "Loading key %s..."
 msgstr ""
 
-#: ../src/gc_config.c:69
+#: ../src/gc_config.c:71
 #, c-format
-msgid "Got key %s"
+msgid "Unable to load key %s: %s"
+msgstr ""
+
+#: ../src/gc_config.c:79
+#, c-format
+msgid "Loaded key %s."
+msgstr ""
+
+#: ../src/gc_config.c:82
+#, c-format
+msgid "Loaded group %s."
 msgstr ""
 
 #: ../src/gc_main_window.c:38

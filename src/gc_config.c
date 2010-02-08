@@ -42,31 +42,44 @@ static void gc_value_replace_variable(gpointer *value)
 {
     /* TODO: replace ${variable}s */
 }
-static gchar **gc_key_file_get_keys(const char *group_name)
+
+static gpointer gc_key_file_get_string_list(const gchar *group_name, const gchar *key, GError *err)
+{
+    gchar **values = NULL, **pvalue = NULL;
+    GPtrArray *str_array;
+    GString *string;
+    values = g_key_file_get_string_list(gc_key_file, group_name, key, NULL, &err);
+    if (err != NULL) {
+        return NULL;
+    }
+    str_array = g_ptr_array_new();
+    for (pvalue = values; *pvalue != NULL; pvalue++)
+    {
+        string = g_string_new(*pvalue);
+        g_ptr_array_add(str_array, string);
+    }
+    return str_array;
+}
+static void gc_key_file_get_keys(const char *group_name,
+        gpointer get_key(GKeyFile *, const gchar *, const gchar *, GError **))
 {
     GError *err = NULL;
-    gchar **keys = NULL;
-    g_message(_("Loading group %s from configuration..."), group_name);
+    gchar **keys = NULL, **pkey;
+    gpointer value;
+    g_debug(_("Loading group %s..."), group_name);
     keys = g_key_file_get_keys(gc_key_file, group_name, NULL, &err);
     if (err != NULL) {
         g_warning(_("Unable to load group %s: %s"), group_name, err->message);
         g_error_free(err);
-    }
-    return keys;
-}
-
-static void gc_key_file_load_keys(const gchar *group_name, gchar **keys,
-        gpointer get_key(GKeyFile *, const gchar *, const gchar *, GError **))
-{
-    GError *err = NULL;
-    gchar **pkey = NULL;
-    gpointer value;
-    if (keys == NULL) {
         return;
     }
     for (pkey = keys; *pkey != NULL; pkey++) {
-        g_message(_("Loading key %s"), *pkey);
-        value = get_key(gc_key_file, group_name, *pkey, &err);
+        g_debug(_("Loading key %s..."), *pkey);
+        if (get_key == g_key_file_get_string_list) {
+            value == gc_key_file_get_string_list(group_name, *pkey, err);
+        } else {
+            value = get_key(gc_key_file, group_name, *pkey, &err);
+        }
         if (err != NULL) {
             g_warning(_("Unable to load key %s: %s"), *pkey, err->message);
             g_error_free(err);
@@ -76,15 +89,14 @@ static void gc_key_file_load_keys(const gchar *group_name, gchar **keys,
             gc_value_replace_variable(&value);
         }
         g_datalist_set_data(&gc_config, *pkey, value);
-        g_message(_("Loaded key %s"), *pkey);
+        g_debug(_("Loaded key %s."), *pkey);
     }
     g_strfreev(keys);
+    g_debug(_("Loaded group %s."), group_name);
 }
 
 gboolean gc_config_init (void)
 {
-    char **keys;
-
     g_datalist_init(&gc_config);
 
     if (gc_key_file_init()) {
@@ -92,23 +104,16 @@ gboolean gc_config_init (void)
         return TRUE;
     }
 
-    keys = gc_key_file_get_keys("Environment");
-    gc_key_file_load_keys("Environment", keys, g_key_file_get_string);
-    keys = gc_key_file_get_keys("Geometry");
-    gc_key_file_load_keys("Geometry", keys, g_key_file_get_integer);
-    keys = gc_key_file_get_keys("History");
-    gc_key_file_load_keys("History", keys, g_key_file_get_integer);
-    keys = gc_key_file_get_keys("Completion");
-    gc_key_file_load_keys("Completion", keys, g_key_file_get_integer);
-    keys = gc_key_file_get_keys("Switch");
-    gc_key_file_load_keys("Switch", keys, g_key_file_get_boolean);
-    keys = gc_key_file_get_keys("ProtocolHandler");
-    gc_key_file_load_keys("ProtocolHandler", keys, g_key_file_get_string);
-    keys = gc_key_file_get_keys("ExtensionHandler");
-    gc_key_file_load_keys("ExtensionHandler", keys, g_key_file_get_string);
-//    keys = gc_key_file_get_keys("Terminal");
-//    keys = gc_key_file_get_keys("Protocol");
-//    keys = gc_key_file_get_keys("Extension");
+    gc_key_file_get_keys("Environment", g_key_file_get_string);
+    gc_key_file_get_keys("Geometry", g_key_file_get_integer);
+    gc_key_file_get_keys("History", g_key_file_get_integer);
+    gc_key_file_get_keys("Completion", g_key_file_get_integer);
+    gc_key_file_get_keys("Switch", g_key_file_get_boolean);
+    gc_key_file_get_keys("ProtocolHandler", g_key_file_get_string);
+    gc_key_file_get_keys("ExtensionHandler", g_key_file_get_string);
+    gc_key_file_get_keys("Terminal", g_key_file_get_string_list);
+    gc_key_file_get_keys("Protocol", g_key_file_get_string_list);
+    gc_key_file_get_keys("Extension", g_key_file_get_string_list);
 
     g_key_file_free (gc_key_file);
     return FALSE;

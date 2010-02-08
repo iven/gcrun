@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gcrun 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-06 22:11+0800\n"
+"POT-Creation-Date: 2010-02-07 18:23+0800\n"
 "PO-Revision-Date: 2010-02-05 18:06+0800\n"
 "Last-Translator: Iven Day <ivenvd@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -20,24 +20,32 @@ msgstr ""
 msgid "Unable to load configuration file: %s"
 msgstr "无法载入配置文件: %s"
 
-#: ../src/gc_config.c:51
-msgid "Loading group %s from configuration..."
-msgstr "正在从配置文件载入组 %s ……"
+#: ../src/gc_config.c:49
+msgid "Loading group %s..."
+msgstr "正在载入组 %s ……"
 
-#: ../src/gc_config.c:54
+#: ../src/gc_config.c:52
 #, c-format
 msgid "Unable to load group %s: %s"
 msgstr "无法载入组 %s: %s"
 
-#: ../src/gc_config.c:61
+#: ../src/gc_config.c:68
 #, c-format
-msgid "Unable to get key %s: %s"
-msgstr "无法获得键 %s: %s"
+msgid "Loading key %s..."
+msgstr "正在载入键 %s ……"
 
-#: ../src/gc_config.c:69
+#: ../src/gc_config.c:71
+msgid "Unable to load key %s: %s"
+msgstr "无法载入键 %s: %s"
+
+#: ../src/gc_config.c:79
+msgid "Loaded key %s."
+msgstr "载入了键 %s。"
+
+#: ../src/gc_config.c:82
 #, c-format
-msgid "Got key %s"
-msgstr "获得了键 %s"
+msgid "Loaded group %s."
+msgstr "载入了组 %s。"
 
 #: ../src/gc_main_window.c:38
 msgid "Run Program:"
