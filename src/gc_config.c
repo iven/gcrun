@@ -115,38 +115,28 @@ gboolean gc_config_init (void)
     gc_key_file_get_keys("Protocol", g_key_file_get_string_list);
     gc_key_file_get_keys("Extension", g_key_file_get_string_list);
 
+    /* TODO: Process Protocol and Extension Handlers. */
+
     g_key_file_free (gc_key_file);
     return FALSE;
 }
 
-//gint gc_key_file_get_integer (const gchar *group, const gchar *key) {
-//    GError *err = NULL;
-//    gint value = g_key_file_get_integer (gc_key_file, group, key, &err);
-//    if (err != NULL) {
-//        gc_show_error (&err);
-//        gc_key_file_set_integer (group, key, 0);
-//        value = 0;
-//    }
-//    return value;
-//}
-//gboolean gc_key_file_get_boolean (const gchar *group, const gchar *key) {
-//    GError *err = NULL;
-//    gboolean value = g_key_file_get_boolean (gc_key_file, group, key, &err);
-//    if (err != NULL) {
-//        gc_show_error (&err);
-//        gc_key_file_set_boolean (group, key, FALSE);
-//        value = FALSE;
-//    }
-//    return value;
-//}
-//gchar *gc_key_file_get_value (const gchar *group, const gchar *key) {
-//    GError *err = NULL;
-//    gchar *value = g_key_file_get_value (gc_key_file, group, key, &err);
-//    if (err != NULL) {
-//        gc_show_error (&err);
-//        gc_key_file_set_value (group, key, "");
-//        value = "";
-//    }
-//    return value;
-//}
+gint gc_config_get_integer(const char *key, const gint pre_value)
+{
+    gpointer retval = g_datalist_get_data(gc_config, key);
+    return retval == NULL ? pre_value : (gint) retval;
+}
+
+gboolean gc_config_get_boolean(const char *key, const gboolean pre_value)
+{
+    gpointer retval = g_datalist_get_data(gc_config, key);
+    return retval == NULL ? pre_value : (gboolean) retval;
+}
+
+gchar *gc_config_get_string(const char *key, const gchar *pre_value)
+{
+    /* TODO: Use GString instead of (gchar *)? */
+    gpointer retval = g_datalist_get_data(gc_config, key);
+    return retval == NULL ? pre_value : (gchar *) retval;
+}
 
