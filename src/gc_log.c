@@ -16,10 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef  gc_main_window_h_INC
-#define  gc_main_window_h_INC
+#include	"gc_log.h"
 
-#include	"config.h"
-GtkWidget *gc_main_window_new(gchar *geometry);
+static void gc_debug_handler(const gchar *log_domain, GLogLevelFlags log_level,
+        const gchar *message, gpointer user_data)
+{
+#ifdef  DEBUG
+    g_print("** DEBUG: %s\n", message);
+#endif     /* -----  DEBUG  ----- */
+}
 
-#endif   /* ----- #ifndef gc_main_window_h_INC  ----- */
+inline void gc_log_init(void)
+{
+    g_log_set_handler(NULL, G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL
+           | G_LOG_FLAG_RECURSION, gc_debug_handler, NULL);
+}

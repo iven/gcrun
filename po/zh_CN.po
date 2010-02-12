@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gcrun 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-07 18:23+0800\n"
+"POT-Creation-Date: 2010-02-11 18:38+0800\n"
 "PO-Revision-Date: 2010-02-05 18:06+0800\n"
 "Last-Translator: Iven Day <ivenvd@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -20,33 +20,59 @@ msgstr ""
 msgid "Unable to load configuration file: %s"
 msgstr "无法载入配置文件: %s"
 
-#: ../src/gc_config.c:49
+#: ../src/gc_config.c:69
+#, c-format
 msgid "Loading group %s..."
 msgstr "正在载入组 %s ……"
 
-#: ../src/gc_config.c:52
+#: ../src/gc_config.c:72
 #, c-format
 msgid "Unable to load group %s: %s"
 msgstr "无法载入组 %s: %s"
 
-#: ../src/gc_config.c:68
+#: ../src/gc_config.c:77
 #, c-format
 msgid "Loading key %s..."
 msgstr "正在载入键 %s ……"
 
-#: ../src/gc_config.c:71
+#: ../src/gc_config.c:84
+#, c-format
 msgid "Unable to load key %s: %s"
 msgstr "无法载入键 %s: %s"
 
-#: ../src/gc_config.c:79
+#: ../src/gc_config.c:92
+#, c-format
 msgid "Loaded key %s."
 msgstr "载入了键 %s。"
 
-#: ../src/gc_config.c:82
+#: ../src/gc_config.c:95
 #, c-format
 msgid "Loaded group %s."
 msgstr "载入了组 %s。"
 
-#: ../src/gc_main_window.c:38
+#: ../src/gc_main_window.c:35
+#, c-format
+msgid "Moving window to (%d, %d)..."
+msgstr "正在移动窗口到（%d, %d）……"
+
+#: ../src/gc_main_window.c:39
+#, c-format
+msgid "Setting window width %d..."
+msgstr "正在设置窗口宽度为 %d ……"
+
+#: ../src/gc_main_window.c:51
 msgid "Run Program:"
 msgstr "运行程序："
+
+#: ../src/main.c:36
+msgid "Create the initial window with the given geometry."
+msgstr "用给定的几何属性创建初始窗口。"
+
+#: ../src/main.c:48
+msgid "- GTK+ Completion-Run Utility"
+msgstr "- 基于 GTK+ 的快速启动工具"
+
+#: ../src/main.c:52
+#, c-format
+msgid "Option parsing failed: %s\n"
+msgstr "参数解析失败：%s\n"

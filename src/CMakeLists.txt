@@ -2,10 +2,10 @@
 FIND_PACKAGE (GTK2 REQUIRED COMPONENTS gtk)
 INCLUDE_DIRECTORIES (${GTK2_INCLUDE_DIRS})
 # enable warning
-ADD_DEFINITIONS ("-g -Wall")
+ADD_DEFINITIONS ("-g -Wall -DDEBUG")
 #ADD_DEFINITIONS (-DG_DISABLE_ASSERT)
 # set targets
-SET (SRC_LIST main gc_config gc_main_window)
+SET (SRC_LIST main gc_main_window gc_config gc_log)
 ADD_EXECUTABLE (gcrun ${SRC_LIST})
 TARGET_LINK_LIBRARIES (gcrun ${GTK2_LIBRARIES})
 INSTALL (TARGETS gcrun DESTINATION bin)

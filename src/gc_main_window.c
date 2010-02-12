@@ -19,12 +19,25 @@
 #include	"gc_main_window.h"
 #include	"gc_config.h"
 
-GtkWidget *gc_main_window_new(void)
+GtkWidget *gc_main_window_new(gchar *geometry)
 {
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
     gtk_window_set_title(GTK_WINDOW(window), APP_NAME " - GTK+ Completion-Run Utility");
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+
+    if (geometry != NULL && gtk_window_parse_geometry(GTK_WINDOW(window), geometry)) {
+        g_free(geometry);
+    } else {
+        gint geo_left, geo_top;
+        geo_left = gc_config_get_integer("Geo_Left", 100);
+        geo_top = gc_config_get_integer("Geo_Top", 80);
+        g_debug(_("Moving window to (%d, %d)..."), geo_left, geo_top);
+        gtk_window_move(GTK_WINDOW(window), geo_left, geo_top);
+    }
+    gint geo_width = gc_config_get_integer("Geo_Width", 400);
+    g_debug(_("Setting window width %d..."), geo_width);
+    gtk_widget_set_size_request(window, geo_width, -1);
     g_signal_connect(window, "destroy", gtk_main_quit, NULL);
 
     GtkWidget *vbox = gtk_vbox_new(FALSE, 2);

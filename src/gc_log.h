@@ -16,10 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef  gc_main_window_h_INC
-#define  gc_main_window_h_INC
+#ifndef  gc_log_h_INC
+#define  gc_log_h_INC
 
 #include	"config.h"
-GtkWidget *gc_main_window_new(gchar *geometry);
+inline void gc_log_init(void);
 
-#endif   /* ----- #ifndef gc_main_window_h_INC  ----- */
+#endif   /* ----- #ifndef gc_log_h_INC  ----- */
