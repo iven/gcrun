@@ -25,6 +25,7 @@ GtkWidget *gc_main_window_new(gchar *geometry)
     gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
     gtk_window_set_title(GTK_WINDOW(window), APP_NAME " - GTK+ Completion-Run Utility");
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+    gtk_container_set_border_width(GTK_CONTAINER(window), 3);
 
     if (geometry != NULL && gtk_window_parse_geometry(GTK_WINDOW(window), geometry)) {
         g_free(geometry);
@@ -38,7 +39,7 @@ GtkWidget *gc_main_window_new(gchar *geometry)
     gint geo_width = gc_config_get_integer("Geo_Width", 400);
     g_debug(_("Setting window width %d..."), geo_width);
     gtk_widget_set_size_request(window, geo_width, -1);
-    g_signal_connect(window, "destroy", gtk_main_quit, NULL);
+    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     GtkWidget *vbox = gtk_vbox_new(FALSE, 2);
     gtk_widget_show(vbox);
@@ -51,6 +52,10 @@ GtkWidget *gc_main_window_new(gchar *geometry)
     GtkWidget *label = gtk_label_new(_("Run Program:"));
     gtk_widget_show(label);
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+
+    GtkWidget *entry = gc_entry_new();
+    gtk_widget_show(entry);
+    gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 
     return window;
 }

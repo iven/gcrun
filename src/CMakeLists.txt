@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES (${GTK2_INCLUDE_DIRS})
 ADD_DEFINITIONS ("-g -Wall -DDEBUG")
 #ADD_DEFINITIONS (-DG_DISABLE_ASSERT)
 # set targets
-SET (SRC_LIST main gc_main_window gc_config gc_log)
+SET (SRC_LIST main gc_main_window gc_entry gc_config gc_log)
 ADD_EXECUTABLE (gcrun ${SRC_LIST})
 TARGET_LINK_LIBRARIES (gcrun ${GTK2_LIBRARIES})
 INSTALL (TARGETS gcrun DESTINATION bin)
