@@ -23,18 +23,55 @@ static gboolean on_key_press(GtkWidget *entry, GdkEventKey *event, gpointer data
 {
     switch (event->keyval) {
         case GDK_Escape:
-            gtk_main_quit();
+            g_signal_emit_by_name(entry, "destroy");
+            break;
+        case GDK_Return:
+            if (event->state & GDK_CONTROL_MASK) {
+                gc_entry_set_in_term(entry, TRUE);
+                g_signal_emit_by_name(entry, "activate");
+            }
             break;
         default:
             break;
     }
+
     return FALSE;
 }
+
+static gboolean on_changed(GtkWidget *entry, gpointer data)
+{
+
+    return FALSE;
+}
+
+void gc_entry_set_in_term(GtkWidget *entry, gboolean value)
+{
+    g_object_set_data(G_OBJECT(entry), "in_term", GINT_TO_POINTER(value));
+    return;
+}
+
+gboolean gc_entry_get_in_term(GtkWidget *entry)
+{
+    return GPOINTER_TO_INT(g_object_get_data(G_OBJECT(entry), "in_term"));
+}
+
 GtkWidget *gc_entry_new(void)
 {
     GtkWidget *entry = gtk_entry_new();
+    gc_entry_set_in_term(entry, FALSE);
+    g_signal_connect(entry, "key_press_event", G_CALLBACK(on_key_press), NULL);
+    g_signal_connect(entry, "changed", G_CALLBACK(on_changed), NULL);
 
-    g_signal_connect(G_OBJECT(entry), "key_press_event", G_CALLBACK(on_key_press), NULL);
+    GtkEntryCompletion *completion = gtk_entry_completion_new();
+    gtk_entry_set_completion(GTK_ENTRY(entry), completion);
+
+    GtkListStore *model = gtk_list_store_new(1, G_TYPE_STRING);
+    GtkTreeIter iter;
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 0, "foobar", -1);
+
+    gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(model));
+    gtk_entry_completion_set_text_column(completion, 0);
 
     return entry;
 }

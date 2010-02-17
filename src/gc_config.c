@@ -123,20 +123,20 @@ gboolean gc_config_init (void)
 
 gint gc_config_get_integer(const char *key, const gint pre_value)
 {
-    gpointer retval = g_datalist_get_data(gc_config, key);
-    return retval == NULL ? pre_value : (gint) retval;
+    gpointer retval = g_datalist_get_data(&gc_config, key);
+    return retval == NULL ? pre_value : GPOINTER_TO_INT(retval);
 }
 
 gboolean gc_config_get_boolean(const char *key, const gboolean pre_value)
 {
-    gpointer retval = g_datalist_get_data(gc_config, key);
-    return retval == NULL ? pre_value : (gboolean) retval;
+    gpointer retval = g_datalist_get_data(&gc_config, key);
+    return retval == NULL ? pre_value : GPOINTER_TO_INT(retval);
 }
 
-gchar *gc_config_get_string(const char *key, const gchar *pre_value)
+const gchar *gc_config_get_string(const char *key, const gchar *pre_value)
 {
     /* TODO: Use GString instead of (gchar *)? */
-    gpointer retval = g_datalist_get_data(gc_config, key);
-    return retval == NULL ? pre_value : (gchar *) retval;
+    gpointer retval = g_datalist_get_data(&gc_config, key);
+    return retval == NULL ? pre_value : (const gchar *) retval;
 }
 

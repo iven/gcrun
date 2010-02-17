@@ -17,7 +17,23 @@
  */
 
 #include	"gc_main_window.h"
+#include	"gc_entry.h"
 #include	"gc_config.h"
+
+static gboolean on_destroy(GtkWidget *entry, gpointer data)
+{
+    gtk_main_quit();
+
+    return FALSE;
+}
+
+static gboolean on_activate(GtkWidget *entry, gpointer data)
+{
+    g_spawn_command_line_async(gtk_entry_get_text(GTK_ENTRY(entry)), NULL);
+
+    g_signal_emit_by_name(entry, "destroy");
+    return TRUE;
+}
 
 GtkWidget *gc_main_window_new(gchar *geometry)
 {
@@ -39,7 +55,7 @@ GtkWidget *gc_main_window_new(gchar *geometry)
     gint geo_width = gc_config_get_integer("Geo_Width", 400);
     g_debug(_("Setting window width %d..."), geo_width);
     gtk_widget_set_size_request(window, geo_width, -1);
-    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(window, "destroy", G_CALLBACK(on_destroy), NULL);
 
     GtkWidget *vbox = gtk_vbox_new(FALSE, 2);
     gtk_widget_show(vbox);
@@ -54,6 +70,8 @@ GtkWidget *gc_main_window_new(gchar *geometry)
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
     GtkWidget *entry = gc_entry_new();
+    g_signal_connect(entry, "activate", G_CALLBACK(on_activate), FALSE);
+    g_signal_connect(entry, "destroy", G_CALLBACK(on_destroy), NULL);
     gtk_widget_show(entry);
     gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 

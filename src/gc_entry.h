@@ -21,5 +21,7 @@
 
 #include	"config.h"
 GtkWidget *gc_entry_new(void);
+void gc_entry_set_in_term(GtkWidget *entry, gboolean value);
+gboolean gc_entry_get_in_term(GtkWidget *entry);
 
 #endif   /* ----- #ifndef gc_entry_h_INC  ----- */
