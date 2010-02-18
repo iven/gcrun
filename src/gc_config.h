@@ -25,5 +25,6 @@ gboolean gc_config_init(void);
 gint gc_config_get_integer(const char *key, const gint pre_value);
 gboolean gc_config_get_boolean(const char *key, const gboolean pre_value);
 const gchar *gc_config_get_string(const char *key, const gchar *pre_value);
+const gchar *gc_config_get_string_join(const gchar *prefix, const gchar *body, const gchar *pre_value);
 
 #endif   /* ----- #ifndef gc_config_h_INC  ----- */

@@ -21,6 +21,12 @@
 static GKeyFile *gc_key_file;
 static GData *gc_config;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_key_file_init
+ *  Description:  Just open the configuration file.
+ * =====================================================================================
+ */
 static gboolean gc_key_file_init(void)
 {
     GError *err = NULL;
@@ -38,38 +44,49 @@ static gboolean gc_key_file_init(void)
     return FALSE;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_value_replace_variable
+ *  Description:  Replace ${variable}s with actual environment values.
+ * =====================================================================================
+ */
 static void gc_value_replace_variable(gpointer *value)
 {
     GString *string = g_string_new("");
-    gchar *p_str = (gchar *) *value;
-    gint i, len;
-    for (i = 0; *(p_str + i) != NULL; i++) {
-        if (*(p_str + i) == '$' && *(p_str + i + 1) == '{') {
-            for (len = 0; *(p_str + i + 2 + len) != NULL; len++)
-                if (*(p_str + i + 2 + len) == '}')
-                    break;
-            if (*(p_str + i + 2 + len) == NULL) {
-                g_string_append(string, p_str + i);
-                break;
-            }
-            GString *env_key = g_string_new("Env_");
-            g_string_append_len(env_key, p_str + i + 2, len);
-            const gchar *env_val = gc_config_get_string(env_key->str, NULL);
-            if (env_val == NULL) {
-                g_string_append_c(string, *(p_str + i));
-            } else {
-                i += len + 2;
+    gchar *p_str, *p_found, *env_key;
+    const gchar *env_val;
+
+    p_str = (gchar *) *value;
+    p_found = g_strstr_len(p_str, -1, "${");    /* find ${ */
+    while (p_found != NULL) {                   /* found ${ */
+        g_string_append_len(string, p_str, p_found - p_str); /* copy chars before ${ */
+        p_str = p_found;
+        p_found = g_strstr_len(p_str, -1, "}"); /* find } */
+        if (p_found != NULL) {                  /* found } */
+            env_key = g_strndup(p_str + 2, p_found - p_str - 2);
+            env_val = gc_config_get_string_join("Env", env_key, NULL);
+            g_free(env_key);
+            if (env_val != NULL) {              /* got the value */
                 g_string_append(string, env_val);
+            } else {                            /* variable doesn't exist */
+                g_string_append_len(string, p_str, p_found + 1 - p_str);
             }
-            g_string_free(env_key, TRUE);
-        } else {
-            g_string_append_c(string, *(p_str + i));
+            p_str = p_found + 1;                /* search ${ again */
+            p_found = g_strstr_len(p_str, -1, "${");
         }
     }
+    g_string_append(string, p_str);             /* copy remaining chars */
     g_free(*value);
-    *value = (gpointer) string;
+//    g_print("%s\n", string->str);
+    *value = (gpointer) string;                 /* store with GString */
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_key_file_get_string_list
+ *  Description:  Convert gchar** to a GPtrArray which consists with GString.
+ * =====================================================================================
+ */
 static gpointer gc_key_file_get_string_list(const gchar *group_name, const gchar *key, GError *err)
 {
     gchar **values = NULL, **pvalue = NULL;
@@ -127,11 +144,13 @@ gboolean gc_config_init (void)
 {
     g_datalist_init(&gc_config);
 
-    if (gc_key_file_init()) {
+    if (gc_key_file_init()) {                   /* error occurs */
         g_key_file_free (gc_key_file);
         return TRUE;
     }
-
+    /*-----------------------------------------------------------------------------
+     *  Load all the key groups from the configuration file
+     *-----------------------------------------------------------------------------*/
     gc_key_file_get_keys("Environment", g_key_file_get_string);
     gc_key_file_get_keys("Geometry", g_key_file_get_integer);
     gc_key_file_get_keys("History", g_key_file_get_integer);
@@ -169,7 +188,7 @@ gboolean gc_config_get_boolean(const char *key, const gboolean pre_value)
     return GPOINTER_TO_INT(retval);
 }
 
-const gchar *gc_config_get_string(const char *key, const gchar *pre_value)
+const gchar *gc_config_get_string(const gchar *key, const gchar *pre_value)
 {
     gpointer retval = g_datalist_get_data(&gc_config, key);
     if (retval == NULL) {
@@ -183,3 +202,11 @@ const gchar *gc_config_get_string(const char *key, const gchar *pre_value)
     return ((GString *) retval)->str;
 }
 
+const gchar *gc_config_get_string_join(const gchar *prefix,
+        const gchar *body, const gchar *pre_value)
+{
+    gchar *key = g_strjoin("_", prefix, body, NULL);
+    const gchar *retval = gc_config_get_string(key, pre_value);
+    g_free(key);
+    return retval;
+}
