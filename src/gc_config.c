@@ -40,7 +40,34 @@ static gboolean gc_key_file_init(void)
 
 static void gc_value_replace_variable(gpointer *value)
 {
-    /* TODO: replace ${variable}s */
+    GString *string = g_string_new("");
+    gchar *p_str = (gchar *) *value;
+    gint i, len;
+    for (i = 0; *(p_str + i) != NULL; i++) {
+        if (*(p_str + i) == '$' && *(p_str + i + 1) == '{') {
+            for (len = 0; *(p_str + i + 2 + len) != NULL; len++)
+                if (*(p_str + i + 2 + len) == '}')
+                    break;
+            if (*(p_str + i + 2 + len) == NULL) {
+                g_string_append(string, p_str + i);
+                break;
+            }
+            GString *env_key = g_string_new("Env_");
+            g_string_append_len(env_key, p_str + i + 2, len);
+            const gchar *env_val = gc_config_get_string(env_key->str, NULL);
+            if (env_val == NULL) {
+                g_string_append_c(string, *(p_str + i));
+            } else {
+                i += len + 2;
+                g_string_append(string, env_val);
+            }
+            g_string_free(env_key, TRUE);
+        } else {
+            g_string_append_c(string, *(p_str + i));
+        }
+    }
+    g_free(*value);
+    *value = (gpointer) string;
 }
 
 static gpointer gc_key_file_get_string_list(const gchar *group_name, const gchar *key, GError *err)
@@ -60,6 +87,7 @@ static gpointer gc_key_file_get_string_list(const gchar *group_name, const gchar
     }
     return str_array;
 }
+
 static void gc_key_file_get_keys(const char *group_name,
         gpointer get_key(GKeyFile *, const gchar *, const gchar *, GError **))
 {
@@ -124,19 +152,34 @@ gboolean gc_config_init (void)
 gint gc_config_get_integer(const char *key, const gint pre_value)
 {
     gpointer retval = g_datalist_get_data(&gc_config, key);
-    return retval == NULL ? pre_value : GPOINTER_TO_INT(retval);
+    if (retval == NULL) {
+        retval = GINT_TO_POINTER(pre_value);
+        g_datalist_set_data(&gc_config, key, retval);
+    }
+    return GPOINTER_TO_INT(retval);
 }
 
 gboolean gc_config_get_boolean(const char *key, const gboolean pre_value)
 {
     gpointer retval = g_datalist_get_data(&gc_config, key);
-    return retval == NULL ? pre_value : GPOINTER_TO_INT(retval);
+    if (retval == NULL) {
+        retval = GINT_TO_POINTER(pre_value);
+        g_datalist_set_data(&gc_config, key, retval);
+    }
+    return GPOINTER_TO_INT(retval);
 }
 
 const gchar *gc_config_get_string(const char *key, const gchar *pre_value)
 {
-    /* TODO: Use GString instead of (gchar *)? */
     gpointer retval = g_datalist_get_data(&gc_config, key);
-    return retval == NULL ? pre_value : (const gchar *) retval;
+    if (retval == NULL) {
+        if (pre_value == NULL) {
+            return NULL;
+        } else {
+            retval = (gpointer) g_string_new(pre_value);
+            g_datalist_set_data(&gc_config, key, retval);
+        }
+    }
+    return ((GString *) retval)->str;
 }
 
