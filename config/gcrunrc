@@ -31,12 +31,12 @@ Pro_readme = rm;
 Pro_shell = sh;
 
 [ProtocolHandler]
-PH_http = firefox %u
-PH_mailto = mozilla -remote "mailto(%s)"
-PH_manual = man %s
-PH_info = info %s
-PH_readme = less %s
-PH_shell = sh -c '%s'
+H_Pro_http = firefox %u
+H_Pro_mailto = mozilla -remote "mailto(%s)"
+H_Pro_manual = man %s
+H_Pro_info = info %s
+H_Pro_readme = less %s
+H_Pro_shell = sh -c '%s'
 
 [Extension]
 Ext_Text = txt;cc;cpp;h;java;html;htm;epl;tex;latex;js;css;xml;xsl;am;
@@ -44,6 +44,6 @@ Ext_Document = doc;rtf;
 Ext_Pdf = pdf;
 
 [ExtensionHandler]
-EH_Text = gedit %s
-EH_Document = AbiWord %s
-EH_Pdf = evince %s
+H_Ext_Text = gedit %s
+H_Ext_Document = AbiWord %s
+H_Ext_Pdf = evince %s
