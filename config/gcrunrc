@@ -32,6 +32,7 @@ Pro_shell = sh;
 
 [ProtocolHandler]
 H_Pro_http = firefox %u
+H_Pro_file = nautilus %u
 H_Pro_mailto = mozilla -remote "mailto(%s)"
 H_Pro_manual = man %s
 H_Pro_info = info %s
