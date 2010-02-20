@@ -25,7 +25,8 @@ static gchar *gc_str_replace(const gchar *text,
         const gchar *before, const gchar *after)
 {
     GString *string;
-    gchar *p_str, *p_found;
+    const gchar *p_str, *p_found;
+    gchar *retval;
     string = g_string_new("");
     p_str = text;
     p_found = g_strstr_len(p_str, -1, before);
@@ -36,23 +37,52 @@ static gchar *gc_str_replace(const gchar *text,
         p_found = g_strstr_len(p_str, -1, before);
     }
     g_string_append(string, p_str);
-    p_str = string->str;
+    retval = string->str;
     g_string_free(string, FALSE);
-    return p_str;
+    return retval;
+}
+
+static gchar *gc_str_first_token(const gchar *text)
+{
+    const gchar *p_found;
+    p_found = text;
+    while (*p_found != '\0' && *p_found != ' ' && *p_found != '\t') {
+        p_found++;
+    }
+    return g_strndup(text, p_found - text);
 }
 
 static gchar *gc_prot_parse(const gchar *text)
 {
-    gchar *scheme, *replaced_u, *replaced_s;
+    gchar *scheme, *replaced_u, *replaced_s = NULL;
     const gchar *handler;
 
     scheme = g_uri_parse_scheme(text);
-    handler = gc_config_get_string_join("Prot", scheme, "");
-    replaced_u = gc_str_replace(handler, "%u", text);
-    replaced_s = gc_str_replace(replaced_u, "%s", text + strlen(scheme) + 1);
-
-    g_free(replaced_u);
+    handler = gc_config_get_string_join("Prot", scheme, NULL);
+    if (handler != NULL) {
+        replaced_u = gc_str_replace(handler, "%u", text);
+        replaced_s = gc_str_replace(replaced_u, "%s",
+                text + strlen(scheme) + 1);
+        g_free(replaced_u);
+    }
     g_free(scheme);
+    return replaced_s;
+}
+
+static gchar *gc_exte_parse(const gchar *text)
+{
+    gchar *token, *ext, *replaced_s = NULL;
+    const gchar *handler;
+
+    token = gc_str_first_token(text);
+    ext = g_strrstr(token, ".");
+    if (ext != NULL) {
+        handler = gc_config_get_string_join("Exte", ext + 1, NULL);
+        if (handler != NULL) {
+            replaced_s = gc_str_replace(handler, "%s", token);
+        }
+    }
+    g_free(token);
     return replaced_s;
 }
 
@@ -64,12 +94,38 @@ static gboolean on_destroy(GtkWidget *entry, gpointer data)
 
 static gboolean on_activate(GtkWidget *entry, gpointer data)
 {
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-    gchar *str = gc_prot_parse(text);
-    g_print("%s\n", str);
-    g_free(str);
-//    g_spawn_command_line_async(string->str, NULL);
-//    g_signal_emit_by_name(entry, "destroy");
+    const gchar *text, *termexec;
+    gchar *cmd, *token, *tmp;
+    const gchar **ter_always, **p_ter;
+
+    text = gtk_entry_get_text(GTK_ENTRY(entry));
+    if ((cmd = gc_prot_parse(text)) == NULL && 
+            (cmd = gc_exte_parse(text)) == NULL) {
+        cmd = g_strdup(text);
+    }
+    if (!gc_entry_get_in_term(entry)) {
+        ter_always = gc_config_get_string_list("Ter_Always");
+        token = gc_str_first_token(cmd);
+        for (p_ter = ter_always; *p_ter != NULL; p_ter++) {
+            if (g_str_equal(*p_ter, token)) {
+                gc_entry_set_in_term(entry, TRUE);
+                break;
+            }
+        }
+        g_free(token);
+    }
+    if (gc_entry_get_in_term(entry)) {
+        termexec = gc_config_get_string("Env_TermExec", NULL);
+        if (termexec != NULL) {
+            tmp = gc_str_replace(termexec, "%s", cmd);
+            g_free(cmd);
+            cmd = tmp;
+        }
+    }
+    g_debug(_("Running command: %s"), cmd);
+    g_spawn_command_line_async(cmd, NULL);
+    g_free(cmd);
+    g_signal_emit_by_name(entry, "destroy");
     return TRUE;
 }
 

@@ -1,6 +1,6 @@
 [Environment]
-Env_Terminal = gnome-terminal --start-factory-server --use-factory
-Env_TermExec = ${Terminal} -e
+Env_Terminal = gnome-terminal --use-factory
+Env_TermExec = ${Terminal} -e "%s"
 
 [Geometry]
 Geo_Width = 400
@@ -11,12 +11,10 @@ Geo_Left = 200
 His_Size = 256
 
 [Completion]
-Com_TimeOut = 1000
 
 [Switch]
 Swi_ShowLastHistory = true
 Swi_ShowDotFiles = true
-Swi_AutoCompletion = true
 
 [Terminal]
 Ter_Always = ssh;telnet;ftp;lynx;mc;vi;vim;pine;centericq;perldoc;man;

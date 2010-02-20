@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-11 18:38+0800\n"
+"POT-Creation-Date: 2010-02-20 22:10+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,52 +16,57 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/gc_config.c:34
+#: ../src/gc_config.c:42
 #, c-format
 msgid "Unable to load configuration file: %s"
 msgstr ""
 
-#: ../src/gc_config.c:69
+#: ../src/gc_config.c:130
 #, c-format
 msgid "Loading group %s..."
 msgstr ""
 
-#: ../src/gc_config.c:72
+#: ../src/gc_config.c:133
 #, c-format
 msgid "Unable to load group %s: %s"
 msgstr ""
 
-#: ../src/gc_config.c:77
+#: ../src/gc_config.c:138
 #, c-format
 msgid "Loading key %s..."
 msgstr ""
 
-#: ../src/gc_config.c:84
+#: ../src/gc_config.c:145
 #, c-format
 msgid "Unable to load key %s: %s"
 msgstr ""
 
-#: ../src/gc_config.c:92
+#: ../src/gc_config.c:152
 #, c-format
 msgid "Loaded key %s."
 msgstr ""
 
-#: ../src/gc_config.c:95
+#: ../src/gc_config.c:160
 #, c-format
 msgid "Loaded group %s."
 msgstr ""
 
-#: ../src/gc_main_window.c:35
+#: ../src/gc_main_window.c:125
+#, c-format
+msgid "Running command: %s"
+msgstr ""
+
+#: ../src/gc_main_window.c:146
 #, c-format
 msgid "Moving window to (%d, %d)..."
 msgstr ""
 
-#: ../src/gc_main_window.c:39
+#: ../src/gc_main_window.c:150
 #, c-format
 msgid "Setting window width %d..."
 msgstr ""
 
-#: ../src/gc_main_window.c:51
+#: ../src/gc_main_window.c:162
 msgid "Run Program:"
 msgstr ""
 
