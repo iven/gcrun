@@ -21,6 +21,13 @@
 #include	"gc_entry.h"
 #include	"gc_config.h"
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_str_replace
+ *  Description:  Replace @before in @text with @after, The returned string should 
+ *                be freed if no longer needed.
+ * =====================================================================================
+ */
 static gchar *gc_str_replace(const gchar *text,
         const gchar *before, const gchar *after)
 {
@@ -42,6 +49,13 @@ static gchar *gc_str_replace(const gchar *text,
     return retval;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_str_first_token
+ *  Description:  Return a new string constaining the first token of @text, should
+ *                be freed if no longer needed.
+ * =====================================================================================
+ */
 static gchar *gc_str_first_token(const gchar *text)
 {
     const gchar *p_found;
@@ -52,6 +66,14 @@ static gchar *gc_str_first_token(const gchar *text)
     return g_strndup(text, p_found - text);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_exte_parse
+ *  Description:  Return a new string containing the handler and the uri if whose
+ *                protocol can be handled, or NULL if can't. The returned string 
+ *                should be freed if no longer needed.
+ * =====================================================================================
+ */
 static gchar *gc_prot_parse(const gchar *text)
 {
     gchar *scheme, *replaced_u, *replaced_s = NULL;
@@ -69,6 +91,14 @@ static gchar *gc_prot_parse(const gchar *text)
     return replaced_s;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  gc_exte_parse
+ *  Description:  Return a new string containing the handler and the file if whose
+ *                extension can be handled, or NULL if can't. The returned string 
+ *                should be freed if no longer needed.
+ * =====================================================================================
+ */
 static gchar *gc_exte_parse(const gchar *text)
 {
     gchar *token, *ext, *replaced_s = NULL;
