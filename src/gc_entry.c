@@ -17,6 +17,7 @@
  */
 
 #include	<gdk/gdkkeysyms.h>
+#include	<glib/gstdio.h>
 #include	"gc_entry.h"
 
 static gboolean on_key_press(GtkWidget *entry, GdkEventKey *event, gpointer data)
@@ -44,6 +45,39 @@ static gboolean on_changed(GtkWidget *entry, gpointer data)
     return FALSE;
 }
 
+GtkListStore *gc_entry_default_model(void)
+{
+    GtkListStore *model;
+    GtkTreeIter iter;
+    GDir *dir;
+    GError *err = NULL;
+    const gchar *env_path, *file_name;
+    gchar **paths, **p_path, *full_name;
+    struct stat stat_buf;
+
+    model = gtk_list_store_new(1, G_TYPE_STRING);
+    env_path = g_getenv("PATH");
+    paths = g_strsplit(env_path, ":", -1);
+    for (p_path = paths; *p_path != NULL; p_path++) {
+        dir = g_dir_open(*p_path, 0, &err);
+        if (err != NULL) {
+            g_error_free(err);
+            continue;
+        }
+        while ((file_name = g_dir_read_name(dir)) != NULL) {
+            full_name = g_build_filename(*p_path, file_name, NULL);
+            if (g_stat(full_name, &stat_buf) == -1 || S_ISDIR(stat_buf.st_mode)) {
+                continue;
+            }
+            gtk_list_store_append(model, &iter);
+            gtk_list_store_set(model, &iter, 0, file_name, -1);
+        }
+        g_dir_close(dir);
+    }
+    g_strfreev(paths);
+    return model;
+}
+
 void gc_entry_set_in_term(GtkWidget *entry, gboolean value)
 {
     g_object_set_data(G_OBJECT(entry), "in_term", GINT_TO_POINTER(value));
@@ -63,13 +97,12 @@ GtkWidget *gc_entry_new(void)
     g_signal_connect(entry, "changed", G_CALLBACK(on_changed), NULL);
 
     GtkEntryCompletion *completion = gtk_entry_completion_new();
+    gtk_entry_completion_set_inline_completion(completion, TRUE);
+    gtk_entry_completion_set_inline_selection(completion, TRUE);
+    gtk_entry_completion_set_popup_single_match(completion, FALSE);
     gtk_entry_set_completion(GTK_ENTRY(entry), completion);
 
-    GtkListStore *model = gtk_list_store_new(1, G_TYPE_STRING);
-    GtkTreeIter iter;
-    gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 0, "foobar", -1);
-
+    GtkListStore *model = gc_entry_default_model();
     gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(model));
     gtk_entry_completion_set_text_column(completion, 0);
 
